@@ -1,33 +1,117 @@
 <!DOCTYPE html>
 <html lang="no">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtuelt Kjæledyr</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin-top: 50px;
-      }
-      #pet {
-        font-size: 100px;
-      }
-      .button {
-        font-size: 20px;
-        margin: 10px;
-        padding: 10px 20px;
-        cursor: pointer;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #pet {
+            font-size: 100px;
+            transition: transform 0.2s;
+        }
+        .button {
+            font-size: 20px;
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div id="pet">🐱</div>
     <p id="message">Kjæledyret ditt er lykkelig!</p>
     <button class="button" onclick="feed()">Gi mat</button>
     <button class="button" onclick="play()">Lek</button>
     <button class="button" onclick="clean()">Vask</button>
 
-    <script src="pet.js"></script>
-  </body>
+    <script>
+        let needsTimer;  // Timer som må resettes hver gang et behov blir møtt
+        let currentNeed = null;  // Nåværende behov
+
+        // Kjører påminnelsen hvert minutt
+        let reminderTimer = setInterval(remind, 60000);
+
+        function remind() {
+            if (currentNeed !== null) return; // Ikke minne på et nytt behov før det gamle er møtt
+
+            let randomEvent = Math.floor(Math.random() * 3);
+            if (randomEvent === 0) {
+                setNeed("sulten", "Katten din er sulten! Gi den mat.");
+            } else if (randomEvent === 1) {
+                setNeed("lek", "Katten din vil leke! Lek med den.");
+            } else if (randomEvent === 2) {
+                setNeed("vask", "Katten din trenger en vask! Vask den.");
+            }
+        }
+
+        function setNeed(need, message) {
+            currentNeed = need;
+            document.getElementById('message').innerText = message;
+            resetNeedsTimer(); // Start timeren for å se om behovet blir møtt
+        }
+
+        function resetNeedsTimer() {
+            clearTimeout(needsTimer);
+            needsTimer = setTimeout(() => {
+                document.getElementById('message').innerText = "Katten din har reist bort for å finne en bedre eier!";
+                document.getElementById('pet').innerText = "🚶‍♂️";  // Katten går bort
+                disableButtons(); // Deaktiver knappene siden katten har forlatt deg
+                clearInterval(reminderTimer); // Stopp alle påminnelser
+            }, 30000); // 30 sekunder for å møte behovet
+        }
+
+        function disableButtons() {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => button.disabled = true);
+        }
+
+        function clearNeed() {
+            currentNeed = null;
+            clearTimeout(needsTimer); // Stoppe timeren når behovet er møtt
+        }
+
+        function feed() {
+            if (currentNeed === "sulten") {
+                document.getElementById('message').innerText = "Katten din spiser og er glad!";
+                animatePet();
+                clearNeed();
+            } else {
+                document.getElementById('message').innerText = "Katten trenger ikke mat akkurat nå.";
+            }
+        }
+
+        function play() {
+            if (currentNeed === "lek") {
+                document.getElementById('message').innerText = "Katten din leker og er lykkelig!";
+                animatePet();
+                clearNeed();
+            } else {
+                document.getElementById('message').innerText = "Katten trenger ikke å leke akkurat nå.";
+            }
+        }
+
+        function clean() {
+            if (currentNeed === "vask") {
+                document.getElementById('message').innerText = "Katten din blir vasket og er fornøyd!";
+                animatePet();
+                clearNeed();
+            } else {
+                document.getElementById('message').innerText = "Katten trenger ikke en vask akkurat nå.";
+            }
+        }
+
+        function animatePet() {
+            let pet = document.getElementById('pet');
+            pet.style.transform = "scale(1.2)";
+            setTimeout(() => {
+                pet.style.transform = "scale(1)";
+            }, 200);
+        }
+    </script>
+</body>
 </html>
