@@ -28,6 +28,8 @@
     <button class="button" onclick="feed()">Gi mat</button>
     <button class="button" onclick="play()">Lek</button>
     <button class="button" onclick="clean()">Vask</button>
+    <button class="button" onclick="GoForAWalk()">Tur</button>
+
 
     <script>
         let needsTimer;  // Timer som må resettes hver gang et behov blir møtt
@@ -104,6 +106,15 @@
                 document.getElementById('message').innerText = "Katten trenger ikke en vask akkurat nå.";
             }
         }
+        function GoForAWalk() {
+            if  (currentNeed === "tur") {
+                document.getElementById('message').innerText = "Katten er på tur og er fornøyd.";
+                animatePet();
+                clearNeed();
+            } else {
+                document.getElementById('message').innerText = "Katten vil ikke gå på tur nå.";
+            }
+        }   
 
         function animatePet() {
             let pet = document.getElementById('pet');
