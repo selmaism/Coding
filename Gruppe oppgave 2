@@ -34,7 +34,7 @@
         let currentNeed = null;  // Nåværende behov
 
         // Kjører påminnelsen hvert minutt
-        let reminderTimer = setInterval(remind, 60000);
+        let reminderTimer = setInterval(remind, 6000);
 
         function remind() {
             if (currentNeed !== null) return; // Ikke minne på et nytt behov før det gamle er møtt
@@ -62,7 +62,7 @@
                 document.getElementById('pet').innerText = "🚶‍♂️";  // Katten går bort
                 disableButtons(); // Deaktiver knappene siden katten har forlatt deg
                 clearInterval(reminderTimer); // Stopp alle påminnelser
-            }, 30000); // 30 sekunder for å møte behovet
+            }, 3000); // 30 sekunder for å møte behovet
         }
 
         function disableButtons() {
